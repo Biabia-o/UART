@@ -22,7 +22,7 @@ reg rx_end_flag;
 
 
 localparam CLK = 32'd50000000;
-localparam UART_BPS = 32'd9600;
+localparam UART_BPS = 32'd921600;
 localparam BPS_CNT = CLK/UART_BPS;
 
 
@@ -72,7 +72,7 @@ always @(posedge sys_clk or negedge sys_rst_n)
 always @(posedge sys_clk or negedge sys_rst_n)
 			if(sys_rst_n == 1'b0)
 				rx_bit_flag <= 1'b0;
-			else if(rx_baud_cnt == 32'd1000)
+			else if(rx_baud_cnt == BPS_CNT/2)
 				rx_bit_flag <= 1'b1;
 			else 
 				rx_bit_flag <= 1'b0;
