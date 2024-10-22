@@ -16,9 +16,8 @@ reg en;
 
 
 localparam  CLK_FREQ = 32'd25_000_000;            // 系统时钟频率
-//localparam  UART_BPS = 32'd208333;               // 串口波特率
 localparam  UART_BPS = 32'd921600;               // 串口波特率
-localparam  BPS_CNT  = CLK_FREQ/UART_BPS;   // 为得到指定波特率，对系统时钟计数BPS_CNT次
+localparam  BPS_CNT  = CLK_FREQ/UART_BPS;   
 
 
 
