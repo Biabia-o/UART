@@ -9,10 +9,17 @@ output reg tx
 
 );
 
-reg [12:0]rx_cnt;
+reg [31:0]rx_cnt;
 reg [3:0]rx_bit_cnt;
 reg bit_flag;
 reg en;
+
+
+localparam  CLK_FREQ = 32'd25_000_000;            // 系统时钟频率
+//localparam  UART_BPS = 32'd208333;               // 串口波特率
+localparam  UART_BPS = 32'd921600;               // 串口波特率
+localparam  BPS_CNT  = CLK_FREQ/UART_BPS;   // 为得到指定波特率，对系统时钟计数BPS_CNT次
+
 
 
 always @(posedge sys_clk or negedge sys_rst_n)
@@ -27,18 +34,18 @@ always @(posedge sys_clk or negedge sys_rst_n)
 
 always @(posedge sys_clk or negedge sys_rst_n)
 			if(sys_rst_n == 1'b0)
-				rx_cnt <= 13'd0;
-			else if(rx_cnt == 13'd5207)
-				rx_cnt <= 13'd0;
+				rx_cnt <= 32'd0;
+			else if(rx_cnt == BPS_CNT)
+				rx_cnt <= 32'd0;
 			else if(en == 1'b1)
-				rx_cnt <= rx_cnt + 13'd1;
+				rx_cnt <= rx_cnt + 32'd1;
 			else
-				rx_cnt <= 13'd0;
+				rx_cnt <= 32'd0;
 				
 always @(posedge sys_clk or negedge sys_rst_n)
 			if(sys_rst_n == 1'b0)
 				bit_flag <= 1'b0;
-			else if(rx_cnt == 13'd2000)
+			else if(rx_cnt == BPS_CNT >> 1)
 				bit_flag <= 1'b1;
 			else
 				bit_flag <= 1'b0;
@@ -60,7 +67,6 @@ always @(posedge sys_clk or negedge sys_rst_n)
 				tx <= 1'b1;
 			else if(bit_flag == 1'b1)
 				case (rx_bit_cnt)
-//					4'd0 : tx <= 1'b1;
 					4'd1 : tx <= 1'b0;
 					4'd2 : tx <= in_data[0];
 					4'd3 : tx <= in_data[1];
@@ -73,9 +79,5 @@ always @(posedge sys_clk or negedge sys_rst_n)
 					4'd10 : tx <= 1'b1;
 					default : tx <= 1'b1;
 				endcase	
-
-
-
-
 
 endmodule
