@@ -72,7 +72,7 @@ always @(posedge sys_clk or negedge sys_rst_n)
 always @(posedge sys_clk or negedge sys_rst_n)
 			if(sys_rst_n == 1'b0)
 				rx_bit_flag <= 1'b0;
-			else if(rx_baud_cnt == BPS_CNT/2)
+			else if(rx_baud_cnt == BPS_CNT >> 1)
 				rx_bit_flag <= 1'b1;
 			else 
 				rx_bit_flag <= 1'b0;
